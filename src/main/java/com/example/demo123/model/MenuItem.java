@@ -1,18 +1,36 @@
-// src/main/java/com/example/coffeeshop/model/MenuItem.java
+// src/main/java/com/example/demo123/model/MenuItem.java
 package com.example.demo123.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "menu_items")
 public class MenuItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
     private String description;
-    private String image;
+    private String imageUrl;
 
-    public MenuItem(String name, String description, String image) {
-        this.name = name;
-        this.description = description;
-        this.image = image;
+    // Конструкторы
+    public MenuItem() {
     }
 
-    // Getters and Setters
+    public MenuItem(String name, String description, String imageUrl) {
+        this.name = name;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
+
+    // Геттеры и сеттеры
+
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -29,11 +47,11 @@ public class MenuItem {
         this.description = description;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

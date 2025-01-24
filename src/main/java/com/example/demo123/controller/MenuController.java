@@ -1,55 +1,63 @@
-// src/main/java/com/example/coffeeshop/controller/MenuController.java
+// src/main/java/com/example/demo123/controller/MenuController.java
 package com.example.demo123.controller;
 
 import com.example.demo123.model.MenuItem;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo123.repository.MenuItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
+@RequestMapping("/api/menu")
 public class MenuController {
 
-    @GetMapping("/api/menu")
-    public Map<String, List<MenuItem>> getMenu() {
-        Map<String, List<MenuItem>> menuData = new HashMap<>();
+    @Autowired
+    private MenuItemRepository menuItemRepository;
 
-        menuData.put("Coffee", Arrays.asList(
-                new MenuItem("Americano", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Latte", "Creamy blend of coffee and steamed milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Americano", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Latte", "Creamy blend of coffee and steamed milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Espresso", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Latte", "Creamy blend of coffee and steamed milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Cappuccino", "Perfect mix of espresso, steamed milk, and foam.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Espresso", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Latte", "Creamy blend of coffee and steamed milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Espresso", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Latte", "Creamy blend of coffee and steamed milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Cappuccino", "Perfect mix of espresso, steamed milk, and foam.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Espresso", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Latte", "Creamy blend of coffee and steamed milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Cappuccino", "Perfect mix of espresso, steamed milk, and foam.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png")
-        // Добавьте остальные кофе
-        ));
+    // Получить все элементы меню
+    @GetMapping
+    public List<MenuItem> getAllMenuItems() {
+        return menuItemRepository.findAll();
+    }
 
-        menuData.put("Tea", Arrays.asList(
-                new MenuItem("Green Tea", "Refreshing and healthy green tea.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Chai Latte", "Aromatic blend of tea, spices, and milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Black Tea", "Classic black tea.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png")
-                // Добавьте остальные чаи
-        ));
+    // Создать новый элемент меню
+    @PostMapping
+    public MenuItem createMenuItem(@RequestBody MenuItem menuItem) {
+        return menuItemRepository.save(menuItem);
+    }
 
-        menuData.put("Pastries", Arrays.asList(
-                new MenuItem("Croissant", "Flaky and buttery French pastry.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Muffin", "Soft and delicious baked muffin.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Scone", "Biscuit-like treat.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png")
-                // Добавьте остальные выпечки
-        ));
+    // Получить элемент меню по ID
+    @GetMapping("/{id}")
+    public ResponseEntity<MenuItem> getMenuItemById(@PathVariable Long id) {
+        return menuItemRepository.findById(id)
+                .map(menuItem -> ResponseEntity.ok().body(menuItem))
+                .orElse(ResponseEntity.notFound().build());
+    }
 
-        return menuData;
+    // Обновить элемент меню
+    @PutMapping("/{id}")
+    public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @RequestBody MenuItem menuDetails) {
+        return menuItemRepository.findById(id)
+                .map(menuItem -> {
+                    menuItem.setName(menuDetails.getName());
+                    menuItem.setDescription(menuDetails.getDescription());
+                    menuItem.setImageUrl(menuDetails.getImageUrl());
+                    MenuItem updatedMenuItem = menuItemRepository.save(menuItem);
+                    return ResponseEntity.ok().body(updatedMenuItem);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Удалить элемент меню
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMenuItem(@PathVariable Long id) {
+        if (menuItemRepository.existsById(id)) {
+            menuItemRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

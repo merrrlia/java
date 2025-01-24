@@ -1,31 +1,37 @@
 package com.example.demo123.model;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users") // Замените "user" на "users"
-
+@Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
-    @ManyToMany
+    // Другие поля, например, email, пароль и т.д., если необходимо
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "user_roles",
+            name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
-    public User() {}
+    // Конструкторы
+    public User() {
+    }
 
     public User(String name) {
         this.name = name;
     }
+
+    // Геттеры и сеттеры
 
     public Long getId() {
         return id;
@@ -33,6 +39,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<Role> getRoles() {
@@ -43,12 +53,4 @@ public class User {
         this.roles = roles;
     }
 
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-
-    }
 }

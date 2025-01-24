@@ -1,26 +1,28 @@
 package com.example.demo123.model;
 
+// src/main/java/com/example/demo123/model/Role.java
+
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "roles")  // Название таблицы в базе данных
-
+@Table(name = "roles")
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
-//    @ManyToMany(mappedBy = "roles")
-//    private Set<User> users = new HashSet<>();
-
-    public Role() {}
+    // Конструкторы
+    public Role() {
+    }
 
     public Role(String name) {
         this.name = name;
     }
+
+    // Геттеры и сеттеры
 
     public Long getId() {
         return id;
@@ -31,10 +33,8 @@ public class Role {
     }
 
     public void setName(String name) {
-        this.name = name; // Метод для установки имени роли
+        this.name = name;
     }
 
-//    public Set<User> getUsers() {
-//        return users;
-//    }
 }
+
