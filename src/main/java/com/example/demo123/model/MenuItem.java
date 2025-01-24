@@ -1,12 +1,16 @@
-// src/main/java/com/example/demo123/model/MenuItem.java
 package com.example.demo123.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "menu_items")
+@Getter
+@Setter
 public class MenuItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,45 +18,16 @@ public class MenuItem {
     private String name;
     private String description;
     private String imageUrl;
+    private String category;
+    private Double price;
 
-    // Конструкторы
-    public MenuItem() {
-    }
+    public MenuItem() {}
 
-    public MenuItem(String name, String description, String imageUrl) {
+    public MenuItem(String name, String description, String imageUrl, String category, Double price) {
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
-    }
-
-    // Геттеры и сеттеры
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+        this.category = category;
+        this.price = price;
     }
 }

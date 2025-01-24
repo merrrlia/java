@@ -17,11 +17,14 @@ public class MenuController {
     private MenuItemRepository menuItemRepository;
 
     // Получить все элементы меню
+//    @GetMapping
+//    public List<MenuItem> getAllMenuItems() {
+//        return menuItemRepository.findAll();
+//    }
     @GetMapping
-    public List<MenuItem> getAllMenuItems() {
+    public List<MenuItem> getMenu() {
         return menuItemRepository.findAll();
     }
-
     // Создать новый элемент меню
     @PostMapping
     public MenuItem createMenuItem(@RequestBody MenuItem menuItem) {
@@ -32,7 +35,7 @@ public class MenuController {
     @GetMapping("/{id}")
     public ResponseEntity<MenuItem> getMenuItemById(@PathVariable Long id) {
         return menuItemRepository.findById(id)
-                .map(menuItem -> ResponseEntity.ok().body(menuItem))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -44,6 +47,7 @@ public class MenuController {
                     menuItem.setName(menuDetails.getName());
                     menuItem.setDescription(menuDetails.getDescription());
                     menuItem.setImageUrl(menuDetails.getImageUrl());
+                    menuItem.setCategory(menuDetails.getCategory());
                     MenuItem updatedMenuItem = menuItemRepository.save(menuItem);
                     return ResponseEntity.ok().body(updatedMenuItem);
                 })
