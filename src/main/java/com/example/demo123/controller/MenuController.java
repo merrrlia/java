@@ -20,7 +20,6 @@ public class MenuController {
         menuData.put("Coffee", Arrays.asList(
                 new MenuItem("Americano", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
                 new MenuItem("Latte", "Creamy blend of coffee and steamed milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
-                new MenuItem("Cappuccino", "Perfect mix of espresso, steamed milk, and foam.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
                 new MenuItem("Americano", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
                 new MenuItem("Latte", "Creamy blend of coffee and steamed milk.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
                 new MenuItem("Espresso", "Strong and bold shot of coffee.", "https://st.fl.ru/users/bh/bhcre8ive/upload/f_38362b615444bf4d.png"),
