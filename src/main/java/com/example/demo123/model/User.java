@@ -2,8 +2,6 @@ package com.example.demo123.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -22,13 +20,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    private boolean isAdmin = false; // Флаг админа
 
     @Column(columnDefinition = "TEXT")
     private String cartItems; // JSON строка для хранения товаров корзины

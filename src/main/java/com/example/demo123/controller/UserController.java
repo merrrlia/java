@@ -1,67 +1,56 @@
 package com.example.demo123.controller;
 
-import com.example.demo123.dto.UserDTO;
-import com.example.demo123.exception.ResourceNotFoundException;
 import com.example.demo123.model.User;
 import com.example.demo123.repository.UserRepository;
+import com.example.demo123.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/users") // базовый путь для всех маршрутов этого контроллера
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository; // репозиторий для работы с базой данных
+    private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // Получить всех пользователей
-    @GetMapping()
-    public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(user -> new UserDTO(user.getId(), user.getName(), user.getRoles()))
-                .collect(Collectors.toList());
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
-
 
     // Получить пользователя по ID
-     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
-        return ResponseEntity.ok().body(user);
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return userRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
     // Создать нового пользователя
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
+        user.setPassword(user.getPassword());
         User createdUser = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        return ResponseEntity.ok(createdUser);
     }
 
-//    // Обновить пользователя
-//    @PutMapping("/{id}")
-//    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-//        return userRepository.findById(id)
-//                .map(user -> {
-//                    user.setName(userDetails.getName()); // обновляем имя пользователя
-//                    User updatedUser = userRepository.save(user);
-//                    return ResponseEntity.ok().body(updatedUser);
-//                })
-//                .orElse(ResponseEntity.notFound().build());
-//    }
-    // Обновить пользователя
+    // Обновить данные пользователя (включая назначение роли админа)
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        System.out.println("userDetails" + userDetails);
         return userRepository.findById(id)
                 .map(user -> {
-                    user.setName(userDetails.getName()); // обновляем имя пользователя
-                    // Добавьте здесь другие поля для обновления, если нужно
+                    user.setName(userDetails.getName());
+                    user.setAdmin(userDetails.isAdmin());
                     User updatedUser = userRepository.save(user);
-                    return ResponseEntity.ok().body(updatedUser);
+                    return ResponseEntity.ok(updatedUser);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -76,5 +65,4 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

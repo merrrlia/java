@@ -1,17 +1,14 @@
 package com.example.demo123.dto;
 
-import com.example.demo123.model.Role;  // Убедитесь, что используете правильный Role
-import java.util.Set;
-
 public class UserDTO {
     private Long id;
     private String name;
-    private Set<Role> roles;  // Используем ваш собственный класс Role
+    private boolean isAdmin;  // Удалена зависимость от Role, добавлено поле isAdmin
 
-    public UserDTO(Long id, String name, Set<Role> roles) {
+    public UserDTO(Long id, String name, boolean isAdmin) {
         this.id = id;
         this.name = name;
-        this.roles = roles;
+        this.isAdmin = isAdmin;
     }
 
     // Геттеры и сеттеры
@@ -31,11 +28,11 @@ public class UserDTO {
         this.name = name;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }

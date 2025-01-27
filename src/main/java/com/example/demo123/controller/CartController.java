@@ -28,7 +28,7 @@ public class CartController {
         }
 
         user.setCartItems(cartItems);
-        userService.updateUser(user);
+        userService.updateUser(user.getId(), user);
 
         return ResponseEntity.ok("Cart updated successfully");
     }

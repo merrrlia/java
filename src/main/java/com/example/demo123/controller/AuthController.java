@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -35,10 +38,17 @@ public class AuthController {
 
         if (foundUser != null && passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
             String token = jwtUtil.generateToken(foundUser.getEmail());
-            return ResponseEntity.ok(token);
+
+            // Формируем ответ с информацией о пользователе и токеном
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("isAdmin", foundUser.isAdmin()); // Проверка роли пользователя
+
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
+
 
 }

@@ -28,13 +28,19 @@ public class UserService {
         return userRepository.findByEmail(email).orElse(null);
     }
 
-    // Обновление данных пользователя (например, корзины)
-    public User updateUser(User user) {
-        return userRepository.findByEmail(user.getEmail())
+    // Обновление данных пользователя (например, корзины или роли)
+    public User updateUser(Long userId, User userDetails) {
+        return userRepository.findById(userId)
                 .map(existingUser -> {
-                    existingUser.setCartItems(user.getCartItems());
+                    existingUser.setName(userDetails.getName());
+                    existingUser.setCartItems(userDetails.getCartItems());
+                    existingUser.setAdmin(userDetails.isAdmin());
                     return userRepository.save(existingUser);
                 })
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + user.getEmail()));
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+    }
+
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }
