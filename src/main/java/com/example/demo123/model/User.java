@@ -1,10 +1,13 @@
 package com.example.demo123.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Data
 public class User {
 
     @Id
@@ -13,7 +16,11 @@ public class User {
 
     private String name;
 
-    // Другие поля, например, email, пароль и т.д., если необходимо
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -21,36 +28,8 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
-    // Конструкторы
-    public User() {
-    }
-
-    public User(String name) {
-        this.name = name;
-    }
-
-    // Геттеры и сеттеры
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
+    @Column(columnDefinition = "TEXT")
+    private String cartItems; // JSON строка для хранения товаров корзины
 }
