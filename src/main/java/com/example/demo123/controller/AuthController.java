@@ -40,7 +40,7 @@ public class AuthController {
         System.out.println("loginUser: " + user);
         User foundUser = userService.getUserByEmail(user.getEmail());
         System.out.println("foundUser: " + foundUser);
-        System.out.println("passwordEncoder: " + passwordEncoder.matches(user.getPassword(), foundUser.getPassword()));
+        //System.out.println("passwordEncoder: " + passwordEncoder.matches(user.getPassword(), foundUser.getPassword()));
 
         if (foundUser != null && passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
             String token = jwtUtil.generateToken(foundUser.getEmail());
@@ -52,7 +52,7 @@ public class AuthController {
 
             return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            return ResponseEntity.status(401).body(Map.of("message", "Неверный пароль. Попробуйте снова."));
         }
     }
 
