@@ -25,8 +25,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
+        if (userService.getUserByEmail(user.getEmail()) != null) {
+            System.out.println("Email already in use: " + user);
+            return ResponseEntity.status(400).body("Email already in use");
+        }
+
         userService.registerUser(user.getEmail(), user.getPassword());
         return ResponseEntity.ok("User registered successfully");
+
     }
 
     @PostMapping("/login")
